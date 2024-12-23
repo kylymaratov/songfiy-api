@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/**
+ * User Models
+ */
+
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  username  String     @unique
+  password  String
+  verified  Boolean    @default(false)
+  songLikes SongLike[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  UserInfo  UserInfo[]
+}
+
+model UserInfo {
+  userSubId Int
+  firstName String?
+  lastName  String?
+  about     String?
+  user      User    @relation(fields: [userSubId], references: [id], onDelete: Cascade)
+
+  @@unique([userSubId])
+}
+
+/**
+ * Song models
+ */
+
+model Song {
+  songId        String        @id @unique
+  originalTitle String
+  title         String?
+  author        String?
+  artist        String?
+  duration      Int
+  isOfficial    Boolean
+  uploadDate    DateTime?
+  isDownloading Boolean
+  listenedCount Int           @default(0)
+  likes         SongLike[]
+  cache         SongCache?
+  metadata      SongMetadata?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model SongMetadata {
+  songId       String
+  fileId       String
+  fileUniqueId String
+  duration     Int
+  performer    String
+  title        String
+  fileName     String
+  mimeType     String
+  fileSize     String
+  thumbnail    Json
+  song         Song   @relation(fields: [songId], references: [songId], onDelete: Cascade)
+
+  @@unique([songId])
+}
+
+model SongCache {
+  songId       String
+  buffer       Bytes
+  lastAccessed DateTime @default(now())
+  song         Song     @relation(fields: [songId], references: [songId], onDelete: Cascade)
+
+  @@unique([songId])
+}
+
+model SongLike {
+  songId String
+  userId Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  song   Song   @relation(fields: [songId], references: [songId], onDelete: Cascade)
+
+  @@unique([songId, userId])
+}
