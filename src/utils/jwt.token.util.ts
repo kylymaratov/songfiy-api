@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class TokenUtil {
+export class JwtTokenUtil {
   generate() {}
 }
