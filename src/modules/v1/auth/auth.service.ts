@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { JwtPayload } from 'src/types/jwt.types';
@@ -7,11 +7,14 @@ import { JwtPayload } from 'src/types/jwt.types';
 export class AuthService {
   constructor(private readonly jwtService: JwtService) {}
 
-  async login(user: User) {
-    const payload: JwtPayload = { email: user.email };
+  async login(user?: User) {
+    if (!user) throw new InternalServerErrorException();
+
+    const payload: JwtPayload = { email: user?.email };
 
     return {
       accessToken: this.jwtService.sign(payload),
+      user,
     };
   }
 }

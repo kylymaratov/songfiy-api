@@ -7,6 +7,8 @@ import { GoogleStrategy } from './strategies/googe.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 //
 import { apiEnv } from 'src/common/api-options/api.env.option';
+import { UserService } from '../user/user.service';
+import { PrismaService } from 'src/database/database.service';
 
 @Module({
   imports: [
@@ -17,6 +19,12 @@ import { apiEnv } from 'src/common/api-options/api.env.option';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    GoogleStrategy,
+    JwtStrategy,
+    UserService,
+    PrismaService,
+  ],
 })
 export class AuthModule {}

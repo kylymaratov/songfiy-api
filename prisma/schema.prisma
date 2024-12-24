@@ -20,13 +20,14 @@ datasource db {
 model User {
   id        Int        @id @default(autoincrement())
   email     String     @unique
-  username  String     @unique
   password  String
   verified  Boolean    @default(false)
   songLikes SongLike[]
+  UserInfo  UserInfo?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  UserInfo  UserInfo?
+
+  @@map("users")
 }
 
 model UserInfo {
@@ -37,6 +38,7 @@ model UserInfo {
   user      User    @relation(fields: [userSubId], references: [id], onDelete: Cascade)
 
   @@unique([userSubId])
+  @@map("user_info")
 }
 
 /**
@@ -59,6 +61,8 @@ model Song {
   metadata      SongMetadata?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+
+  @@map("songs")
 }
 
 model SongMetadata {
@@ -75,6 +79,7 @@ model SongMetadata {
   song         Song   @relation(fields: [songId], references: [songId], onDelete: Cascade)
 
   @@unique([songId])
+  @@map("song_metadata")
 }
 
 model SongCache {
@@ -84,6 +89,7 @@ model SongCache {
   song         Song     @relation(fields: [songId], references: [songId], onDelete: Cascade)
 
   @@unique([songId])
+  @@map("song_cache")
 }
 
 model SongLike {
@@ -93,4 +99,5 @@ model SongLike {
   song   Song   @relation(fields: [songId], references: [songId], onDelete: Cascade)
 
   @@unique([songId, userId])
+  @@map("song_likes")
 }

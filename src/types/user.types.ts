@@ -1,17 +1,5 @@
-export interface User {
-  id: number;
-  email: string;
-  username: string;
-  password: string;
-  verified: boolean;
-  songLikes: any[];
-  createdAt: Date;
-  updatedAt: Date;
-  UserInfo: any[];
-}
-
 export interface GoogleUser {
-  id: string;
+  googleId: string;
   displayName: string;
-  emails: { value: string }[];
+  emails: { value: string; verified: boolean }[];
 }

@@ -17,9 +17,4 @@ export class AuthController {
   async googleAuthCallback(@Req() req: Request) {
     return this.authService.login(req.user as User);
   }
-
-  @Post('signup')
-  createUser() {
-    return 'Success';
-  }
 }

@@ -4,10 +4,11 @@ import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 //
 import { apiEnv } from 'src/common/api-options/api.env.option';
 import { GoogleUser } from 'src/types/user.types';
+import { UserService } from '../../user/user.service';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
-  constructor() {
+  constructor(private readonly userService: UserService) {
     super({
       clientID: apiEnv.env.GOOGLE_CLIENT_ID,
       clientSecret: apiEnv.env.GOOGLE_CLIENT_SECRET,
@@ -21,15 +22,14 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     refreshToken: string,
     profile: GoogleUser,
     done: VerifyCallback,
-  ): Promise<any> {
-    const { id, displayName, emails } = profile;
-
-    const user = {
-      googleId: id,
-      email: emails[0].value,
-      name: displayName,
+  ): Promise<void> {
+    const saveUser = {
+      email: profile.emails[0].value,
+      verified: profile.emails[0].verified,
+      password: '',
     };
+    const user = await this.userService.createUser(saveUser);
 
-    done(null, user);
+    await done(null, user);
   }
 }
