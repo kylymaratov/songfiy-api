@@ -15,7 +15,7 @@ import { PrismaService } from 'src/database/database.service';
     PassportModule,
     JwtModule.register({
       secret: apiEnv.env.JWT_SECRET,
-      signOptions: { expiresIn: '10d' },
+      signOptions: { expiresIn: parseInt(apiEnv.env.JWT_EXPIRE_MS) },
     }),
   ],
   controllers: [AuthController],

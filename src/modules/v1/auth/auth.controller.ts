@@ -3,6 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { Request } from 'express';
 import { User } from '@prisma/client';
+import { CurrentUser } from 'src/common/decorators/user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -14,7 +15,7 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleAuthCallback(@Req() req: Request) {
-    return this.authService.login(req.user as User);
+  async googleAuthCallback(@Req() req: Request, @CurrentUser() user: User) {
+    return this.authService.login(req, user);
   }
 }

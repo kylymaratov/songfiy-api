@@ -18,14 +18,15 @@ datasource db {
  */
 
 model User {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique
+  id        Int           @id @default(autoincrement())
+  email     String        @unique
   password  String
-  verified  Boolean    @default(false)
+  verified  Boolean       @default(false)
   songLikes SongLike[]
-  UserInfo  UserInfo?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  info      UserInfo?
+  sessions  UserSession[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   @@map("users")
 }
@@ -35,10 +36,23 @@ model UserInfo {
   firstName String?
   lastName  String?
   about     String?
+  avatar    String?
   user      User    @relation(fields: [userSubId], references: [id], onDelete: Cascade)
 
   @@unique([userSubId])
   @@map("user_info")
+}
+
+model UserSession {
+  sessionId   String   @id @unique @default(uuid())
+  userAgent   String
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expire      String
+  accessToken String
+  createdAt   DateTime @default(now())
+
+  @@map("sessions")
 }
 
 /**
