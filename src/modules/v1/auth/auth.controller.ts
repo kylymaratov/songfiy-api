@@ -1,21 +1,13 @@
-import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Request } from 'express';
-import { User } from '@prisma/client';
-import { CurrentUser } from 'src/common/decorators/user.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get('google')
-  @UseGuards(AuthGuard('google'))
   googleAuth() {}
 
   @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
-  async googleAuthCallback(@Req() req: Request, @CurrentUser() user: User) {
-    return this.authService.login(req, user);
-  }
+  async googleAuthCallback() {}
 }
