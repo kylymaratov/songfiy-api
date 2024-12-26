@@ -5,6 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { apiEnv } from 'src/common/api-options/api.env.option';
 import { JwtPayload } from 'src/types/jwt.types';
 import { UserService } from '../../user/user.service';
+import { Request } from 'express';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -30,6 +31,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       );
 
       if (!session) throw new Error();
+
+      if (session.userAgent !== req.headers['user-agent'].toString())
+        throw new Error();
 
       delete user.password;
 

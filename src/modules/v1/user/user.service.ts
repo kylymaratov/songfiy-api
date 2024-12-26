@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User, UserSession } from '@prisma/client';
+import { User, UserInfo, UserSession } from '@prisma/client';
 import { apiEnv } from 'src/common/api-options/api.env.option';
 import { PrismaService } from 'src/database/database.service';
 import { GetUserSessionsResponse } from 'src/types/response.types';
@@ -85,5 +85,16 @@ export class UserService {
     });
 
     return createdUser;
+  }
+
+  async getUser(user: User): Promise<User & UserInfo> {
+    const userInfo = await this.prisma.userInfo.findUnique({
+      where: { userSubId: user.id },
+    });
+
+    return {
+      ...user,
+      ...userInfo,
+    };
   }
 }

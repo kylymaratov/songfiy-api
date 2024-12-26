@@ -12,7 +12,7 @@ export class UserController {
 
   @Get('/')
   getUser(@CurrentUser() user: User) {
-    return user;
+    return this.userService.getUser(user);
   }
 
   @Get('sessions')
