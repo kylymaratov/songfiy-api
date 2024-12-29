@@ -3,7 +3,7 @@ import { Client, Video, VideoCompact } from 'youtubei';
 //
 import { Convertion } from 'src/common/utils/convertion';
 import { SONG_TITLE_KEYOWARDS } from 'src/common/constants/keywoards';
-import { regeXP } from 'src/common/constants/regexp';
+import { REGEXP } from 'src/common/constants/regexp';
 
 @Injectable()
 export class SearchHelper {
@@ -61,7 +61,7 @@ export class SearchHelper {
 
   private exctractNamesFromTitle(video: Video | VideoCompact) {
     const author = video.channel?.name.trim() || null;
-    const clearedOrirignalTitle = regeXP.CLEAT_TITLE.reduce(
+    const clearedOrirignalTitle = REGEXP.CLEAT_TITLE.reduce(
       (acc, regex) => acc.replace(regex, ''),
       video.title,
     ).split('-');

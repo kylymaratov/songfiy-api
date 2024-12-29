@@ -1,4 +1,4 @@
-export const regeXP = {
+export const REGEXP = {
   SONG_ID: /^[a-zA-Z0-9-_]{11}$/,
   CLEAT_TITLE: [
     / *\([^)]*\) */g,

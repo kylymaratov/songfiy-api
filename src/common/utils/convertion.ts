@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 //
 import { CYRILIC_TO_LATIN_MAP } from '../constants/dictionary';
-import { regeXP } from '../constants/regexp';
+import { REGEXP } from '../constants/regexp';
 
 @Injectable()
 export class Convertion {
   public convertDate(textDate: string) {
     const date = new Date();
-    const match = textDate.match(regeXP.TEXT_DATE);
+    const match = textDate.match(REGEXP.TEXT_DATE);
     if (match) {
       const value = parseInt(match[1], 10);
       const unit = match[2];
