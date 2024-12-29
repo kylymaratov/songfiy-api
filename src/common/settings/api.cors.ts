@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-import { apiEnv } from './api.env.option';
+import { apiEnv } from './api.env';
 
 export const setApiCors = (app: INestApplication) => {
   app.enableCors({

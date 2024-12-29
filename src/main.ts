@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 //
-import { setApiCors } from './common/api-options/api.cors.option';
-import { setApiDocs } from './common/api-options/api.docs.option';
+import { AppModule } from './app.module';
+import { setApiCors } from './common/settings/api.cors';
+import { setApiDocs } from './common/settings/api.docs';
 import { HttpExceptionFilter } from './common/exceptions/http.exception.filter';
+import { apiEnv } from './common/settings/api.env';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +13,7 @@ async function bootstrap() {
   setApiCors(app);
   setApiDocs(app);
 
+  app.setGlobalPrefix(`/api/${apiEnv.apiVersion}/`);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
 
