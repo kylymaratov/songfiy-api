@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 //
 import { SongController } from './song.controller';
 import { SongService } from './song.service';
-import { SearchHelper } from 'src/common/helpers/youtube-parser/search.helper';
-import { Convertion } from 'src/common/utils/convertion';
-import { DownloadHelper } from 'src/common/helpers/youtube-parser/download.helper';
+import { ParserModule } from 'src/common/helpers/parser/parser.module';
+import { apiEnv } from 'src/common/settings/api.env';
+import { RedisModule as IORedisModule } from '@nestjs-modules/ioredis';
 
 @Module({
-  imports: [],
+  imports: [ParserModule],
   controllers: [SongController],
-  providers: [SongService, SearchHelper, Convertion, DownloadHelper],
+  providers: [SongService],
 })
 export class SongModule {}

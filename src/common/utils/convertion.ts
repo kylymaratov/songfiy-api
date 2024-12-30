@@ -45,4 +45,13 @@ export class Convertion {
       .join('')
       .replace(/[^a-zA-Z0-9]/g, '');
   }
+
+  public convertIsoDuration(isoDuration: string): number {
+    const match = isoDuration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+    const hours = parseInt(match[1]?.replace('H', '') || '0', 10);
+    const minutes = parseInt(match[2]?.replace('M', '') || '0', 10);
+    const seconds = parseInt(match[3]?.replace('S', '') || '0', 10);
+
+    return hours * 3600 + minutes * 60 + seconds;
+  }
 }

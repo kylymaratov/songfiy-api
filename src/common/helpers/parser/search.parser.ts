@@ -6,7 +6,7 @@ import { SONG_TITLE_KEYOWARDS } from 'src/common/constants/keywoards';
 import { REGEXP } from 'src/common/constants/regexp';
 
 @Injectable()
-export class SearchHelper {
+export class SearchParser {
   private readonly MAX_SONG_DURATION: number = 420;
   private readonly MIN_SONG_DURATION: number = 60;
   private readonly client: Client = new Client();
