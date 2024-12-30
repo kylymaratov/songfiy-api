@@ -64,6 +64,7 @@ export class SongService {
 
     res.setHeader('Content-Type', 'audio/mpeg');
     res.setHeader('Content-Disposition', 'inline; filename=' + song.title);
+    res.setHeader('cache-control', 'no-store');
 
     res.send(buffer);
   }
@@ -92,6 +93,7 @@ export class SongService {
     res.setHeader('Content-Type', contentType);
     res.setHeader('Content-Length', end - start + 1);
     res.setHeader('Content-Range', `bytes ${start}-${end}/${contentLength}`);
+    res.setHeader('cache-control', 'max-age=3600');
 
     Readable.from(buffer.slice(start, end + 1)).pipe(res);
   }

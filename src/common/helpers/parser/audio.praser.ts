@@ -14,32 +14,33 @@ export class AudioParser {
 
   public async download(songId: string, quality: number = 1): Promise<Buffer> {
     try {
-      const cachedSong = await this.redis.getBuffer(`cached-song-${songId}`);
+      const cachedSong = await this.redis.getBuffer(`cached-song-[${songId}]`);
 
       if (cachedSong && cachedSong.length) {
-        await this.redis.expire(`cached-song-${songId}`, this.upTtl);
+        await this.redis.expire(`cached-song-[${songId}]`, this.upTtl);
         return cachedSong;
       }
 
-      await this.redis.del(`cached-song-${songId}`);
+      await this.redis.del(`cached-song-[${songId}]`);
 
-      const alreadyDownloading = await this.redis.get(`downloading-${songId}`);
+      const alreadyDownloading = await this.redis.get(
+        `downloading-[${songId}]`,
+      );
 
-      if (alreadyDownloading) throw new Error();
+      if (alreadyDownloading)
+        throw new Error('Song already downloading please wait');
 
-      await this.redis.set(`downloading-${songId}`, 'true');
+      await this.redis.set(`downloading-[${songId}]`, 'true');
 
       const buffer = await this.startDownload(songId, quality);
 
-      await this.redis.setex(`cached-song-${songId}`, this.ttl, buffer);
+      await this.redis.setex(`cached-song-[${songId}]`, this.ttl, buffer);
 
       return buffer;
     } catch (error) {
-      throw new ServiceUnavailableException(
-        `SongId: ${songId} already downloading please wait`,
-      );
+      throw new ServiceUnavailableException((error as Error).message);
     } finally {
-      await this.redis.del(`downloading-${songId}`);
+      await this.redis.del(`downloading-[${songId}]`);
     }
   }
 
@@ -72,12 +73,14 @@ export class AudioParser {
 
       process.on('exit', (code) => {
         if (code !== 0) {
-          reject(new Error());
+          reject(new Error(`Process exited with code ${code}`));
         }
       });
 
-      process.on('error', () => {
-        reject(new Error());
+      process.on('error', (err) => {
+        reject(
+          new Error(`Process encountered an error: ${err.message || err}`),
+        );
       });
     });
   }
